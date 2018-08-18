@@ -194,13 +194,13 @@
                   <div class="input-group">
 
                     <label class="display-inline-block custom-control custom-radio ml-1">
-                      <input type="radio" name="imageEvent" value="logo" formControlName="typeImage" [(ngModel)]="typeImage" (change)="changeTypeImage()" class="custom-control-input">
+                      <input type="radio" name="typeImage" value="logo" formControlName="typeImage" [(ngModel)]="typeImage" (change)="changeTypeImage()" class="custom-control-input">
                       <span class="custom-control-indicator"></span>
                       <span class="custom-control-description ml-0">Logo</span>
                     </label>
 
                     <label class="display-inline-block custom-control custom-radio ml-1">
-                      <input type="radio" name="imageEvent" value="cover" formControlName="typeImage" [(ngModel)]="typeImage" (change)="changeTypeImage()" class="custom-control-input">
+                      <input type="radio" name="typeImage" value="cover" formControlName="typeImage" [(ngModel)]="typeImage" (change)="changeTypeImage()" class="custom-control-input">
                       <span class="custom-control-indicator"></span>
                       <span class="custom-control-description ml-0">Fundo</span>
                     </label>
@@ -276,9 +276,9 @@
               <h4 class="card-title">Logo</h4>
             </div>
 
-            <div *ngIf="getUrl('logo')" class="card-body">
+            <div *ngIf="logoUrl" class="card-body">
               <div class="card-block">
-                <img class="img-fluid max-width: 100%; height: auto;" [src]="getUrl('logo') ">
+                <img class="img-fluid max-width: 100%; height: auto;" [src]="logoUrl ">
               </div>
             </div>
 
@@ -292,9 +292,9 @@
               <h4 class="card-title">Fundo</h4>
             </div>
 
-            <div *ngIf="getUrl('cover')" class="card-body">
+            <div *ngIf="coverUrl" class="card-body">
               <div class="card-block">
-                <img class=" image-cover img-fluid max-width: 100%; height: auto;" [src]="getUrl('cover')">
+                <img class=" image-cover img-fluid max-width: 100%; height: auto;" [src]="coverUrl">
               </div>
             </div>
 

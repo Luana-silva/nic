@@ -215,6 +215,8 @@ export class RegisterEventPageComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       this.event.id = params['id'];
+      this.logoUrl = this.getUrl('logo');
+      this.coverUrl = this.getUrl('cover');
     });
 
     this.formUtils = new FormUtils(this.form);
@@ -346,11 +348,15 @@ export class RegisterEventPageComponent implements OnInit {
       photoUpload.idSubObject = 'cover'
     }
 
+    const newImage = this.data.image;
+
     this.data = {};
     this.eventService.saveImage(photoUpload, (result) => {
 
       if (result.success) {
         console.log('SUCESSO');
+
+        this.typeImage === 'logo' ? this.logoUrl = newImage : this.coverUrl = newImage;
 
         //$("#imageCover").attr("src", this.getUrl('cover'));
         // if(this.event.id != null){
@@ -376,14 +382,14 @@ export class RegisterEventPageComponent implements OnInit {
   }
 
   getUrl(urlSufix: string): string {
-    //var url = Constants.SERVICE_URL + Constants.SERVICE_PROJETC + "event/image/" + this.event.id + '/' + urlSufix
-    let url = null;
     if (this.event.id) {
-      url = Constants.SERVICE_URL + Constants.SERVICE_PROJETC + 'event/image/' + this.event.id + '/' + urlSufix;
+      return this.event.id ? `${Constants.SERVICE_URL}${Constants.SERVICE_PROJETC}event/image/${this.event.id}/${urlSufix}` : null;
     }
-
-    return url;
   }
+
+  logoUrl:any;
+
+  coverUrl:any;
 
   testeAddCompany() {
     // retry(x)// faz evento acontecer x vezes
