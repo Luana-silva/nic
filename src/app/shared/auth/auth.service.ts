@@ -23,7 +23,12 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
-    this.router.navigate(['login'], { relativeTo: this.activatedRoute.parent });
+    this.router.navigate(['login'], { relativeTo: this.activatedRoute.parent});
+  }
+
+  logoutExpire() {
+    localStorage.clear();
+    this.router.navigate(['login'], { relativeTo: this.activatedRoute.parent, queryParams: { expired: true }});
   }
 
   getToken() {

@@ -21,6 +21,8 @@ export class LoginPageComponent implements OnInit{
 
   emailError : string = '';
 
+  isExpired = false;
+
   constructor(private router: Router,
               private route: ActivatedRoute,
               private userService: UserBService,
@@ -28,6 +30,10 @@ export class LoginPageComponent implements OnInit{
               private storage: StorageUtils) { }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.isExpired = params['expired'];
+    });
+
     this.regularForm = new FormGroup({
       email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, [Validators.required, Validators.minLength(4), Validators.maxLength(24)])
