@@ -1,32 +1,32 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild, Injectable, LOCALE_ID} from '@angular/core';
-import {NavBarDataService} from '../../../shared/navbar/navbar-dataservice';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Event} from '../event/event';
-import {ActivatedRoute, Router} from '@angular/router';
-import {EventService} from '../event/event-service';
-import {MyDatePickerModule} from 'mydatepicker';
-import {IMyDpOptions} from 'mydatepicker';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, Injectable, LOCALE_ID } from '@angular/core';
+import { NavBarDataService } from '../../../shared/navbar/navbar-dataservice';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Event } from '../event/event';
+import { ActivatedRoute, Router } from '@angular/router';
+import { EventService } from '../event/event-service';
+import { MyDatePickerModule } from 'mydatepicker';
+import { IMyDpOptions } from 'mydatepicker';
 import swal from 'sweetalert2';
 
-import {CropperSettings, ImageCropperComponent} from 'ng2-img-cropper';
+import { CropperSettings, ImageCropperComponent } from 'ng2-img-cropper';
 
-import {Company} from '../../msk-company/company/company';
-import {CompanyService} from '../../msk-company/company/company-service';
+import { Company } from '../../msk-company/company/company';
+import { CompanyService } from '../../msk-company/company/company-service';
 
-import {DateFormatPipe} from '../../../pipes/date-format.pipe';
-import {BsDatepickerConfig, BsLocaleService} from 'ngx-bootstrap/datepicker';
-import {listLocales} from 'ngx-bootstrap/chronos';
-import {DatatableComponent} from '@swimlane/ngx-datatable';
-import {companyCard} from '../../msk-company/company-card/company-card';
-import {LocalDataSource} from 'ng2-smart-table';
-import {NgbCarouselConfig, NgbDatepickerConfig} from '@ng-bootstrap/ng-bootstrap';
-import {PhotoUpload} from '../../msk-core/photo/photo-upload';
-import {Constants} from '../../../utils/constants';
-import {FormUtils} from '../../../shared/form/form.utils';
+import { DateFormatPipe } from '../../../pipes/date-format.pipe';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { listLocales } from 'ngx-bootstrap/chronos';
+import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { companyCard } from '../../msk-company/company-card/company-card';
+import { LocalDataSource } from 'ng2-smart-table';
+import { NgbCarouselConfig, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
+import { PhotoUpload } from '../../msk-core/photo/photo-upload';
+import { Constants } from '../../../utils/constants';
+import { FormUtils } from '../../../shared/form/form.utils';
 
-import {NgbDatepickerI18n, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerI18n, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
-import {registerLocaleData} from '@angular/common';
+import { registerLocaleData } from '@angular/common';
 import localePtBr from '@angular/common/locales/pt';
 
 registerLocaleData(localePtBr, 'pt-BR');
@@ -72,14 +72,14 @@ declare var require: any;
 
 const now = new Date();
 
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
-import {of} from 'rxjs/observable/of';
-import {catchError, debounceTime, distinctUntilChanged, map, tap, switchMap} from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap } from 'rxjs/operators';
 // import {CompanyService} from "../../msk-company/company/company-service";
-import {CompanySearch} from '../../msk-company/company/company-search';
-import {EventAutoCompleteService} from '../event/event-auto-complete.service';
-import {StorageUtils} from '../../../utils/storage-utils';
+import { CompanySearch } from '../../msk-company/company/company-search';
+import { EventAutoCompleteService } from '../event/event-auto-complete.service';
+import { StorageUtils } from '../../../utils/storage-utils';
 
 
 @Component({
@@ -87,8 +87,8 @@ import {StorageUtils} from '../../../utils/storage-utils';
   templateUrl: './register-event-page.component.html',
   styleUrls: ['./register-event-page.component.scss'],
   providers: [
-    {provide: LOCALE_ID, useValue: 'pt-BR'},
-    I18n, {provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n},
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    I18n, { provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n },
     NgbDatepickerConfig,
     CompanyService,
     EventService,
@@ -125,16 +125,16 @@ export class RegisterEventPageComponent implements OnInit {
 
   @ViewChild('cropper', undefined)
   cropper: ImageCropperComponent;
-// cropper
+  // cropper
 
   source: LocalDataSource;
 
-  rowOptions: Company [];
+  rowOptions: Company[];
 
   rows = [];
   rowsteste = [];
 
-  companies: companyCard [];
+  companies: companyCard[];
 
   companias = [];
   temp = [];
@@ -142,7 +142,7 @@ export class RegisterEventPageComponent implements OnInit {
   company: Company;
   //TIRAR************************************
   companyCard: companyCard;
-//TIRAR************************************
+  //TIRAR************************************
   loadingIndicator: boolean = true;
   reorderable: boolean = true;
   public data_load: any;
@@ -150,9 +150,9 @@ export class RegisterEventPageComponent implements OnInit {
 
   // DataTable Content Titles
   columns = [
-    {prop: 'nome', name: 'Nome'},
-    {prop: 'email', name: 'Email'},
-    {prop: 'Company', name: 'Company'}
+    { prop: 'nome', name: 'Nome' },
+    { prop: 'email', name: 'Email' },
+    { prop: 'Company', name: 'Company' }
   ];
 
   newEdit: string;
@@ -166,15 +166,15 @@ export class RegisterEventPageComponent implements OnInit {
   form: FormGroup;
 
   constructor(config: NgbCarouselConfig,
-              config2: NgbDatepickerConfig,
-              private router: Router,
-              private navBarDataService: NavBarDataService,
-              private route: ActivatedRoute,
-              private companyService: CompanyService,
-              private eventService: EventService,
-              private _service: EventAutoCompleteService,
-              private localeService: BsLocaleService,
-              private storageUtils: StorageUtils) {
+    config2: NgbDatepickerConfig,
+    private router: Router,
+    private navBarDataService: NavBarDataService,
+    private route: ActivatedRoute,
+    private companyService: CompanyService,
+    private eventService: EventService,
+    private _service: EventAutoCompleteService,
+    private localeService: BsLocaleService,
+    private storageUtils: StorageUtils) {
 
     if (this.storageUtils.getRoleId() != "admin") {
       window.location.href = "pages/login";
@@ -222,7 +222,7 @@ export class RegisterEventPageComponent implements OnInit {
     this.formUtils = new FormUtils(this.form);
 
     this.localeService.use(this.locale);
-    this.bsConfig = Object.assign({}, {containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY'});
+    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD/MM/YYYY' });
   }
 
   // Wiki Search
@@ -387,9 +387,9 @@ export class RegisterEventPageComponent implements OnInit {
     }
   }
 
-  logoUrl:any;
+  logoUrl: any;
 
-  coverUrl:any;
+  coverUrl: any;
 
   testeAddCompany() {
     // retry(x)// faz evento acontecer x vezes
@@ -401,72 +401,61 @@ export class RegisterEventPageComponent implements OnInit {
   }
 
   addCompany() {
-
-    this.companias.push(this.companyCard.id);
-    this.companies = this.companias;
-    // console.log(this.companias);
-    // console.log(this.event);
-    this.event.companies.push(this.companyCard);
-    this.event.companies = [...this.event.companies];
-    this.event.compamiesIds.push(this.companyCard.id);
-    // console.log(this.event.compamiesIds);
-
+    if (this.companias.find(c => c.id === this.companyCard.id)) {
+      this.companias.push(this.companyCard.id)
+      this.companies = this.companias;
+      this.event.companies.push(this.companyCard);
+      this.event.companies = [...this.event.companies];
+      this.event.compamiesIds.push(this.companyCard.id);
+    } else {
+      swal(
+        'Cancelado',
+        'A empresa já foi adicionada.',
+        'error'
+      );
+    }
+    this.companyCard = null;
   }
 
   removeCompany(idCompany) {
-
-    let self = this;
-    self.event.companies.forEach(function (item, index) {
-
-      if (item.id == idCompany) {
-        swal({
-          title: 'Atenção',
-          text: 'Tem certeza que deseja remover este parceiro',
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Sim',
-          cancelButtonText: 'Não'
-        }).then((result) => {
-          if (result.value) {
-            //remove companies
-
-            self.event.companies.splice(index, 1);
-            self.event.compamiesIds.splice(index, 1);
-
-            swal(
-              'Removida',
-              'O companhia foi removida com sucesso.',
-              'success'
-            );
-            return true;
-          } else if (result.dismiss === swal.DismissReason.cancel) {
-            swal(
-              'Cancelado',
-              'A empresa não foi removida.',
-              'error'
-            );
-            return false;
-          }
-        })
-
-      } else {
-        swal('A empresa não foi encontrada!');
+    swal({
+      title: 'Atenção',
+      text: 'Tem certeza que deseja remover este parceiro',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Não'
+    }).then((result) => {
+      if (result.value) {
+        this.event.companies = this.event.companies.filter(c => c.id !== idCompany);
+        this.event.compamiesIds = this.event.compamiesIds.filter(cIds => cIds !== idCompany);
+        swal(
+          'Removida',
+          'O companhia foi removida com sucesso.',
+          'success'
+        );
+        return true;
+      } else if (result.dismiss === swal.DismissReason.cancel) {
+        swal(
+          'Cancelado',
+          'A empresa não foi removida.',
+          'error'
+        );
+        return false;
       }
-
-    });
-
+    })
   }
 
   detail(row: any) {
-    this.router.navigate(['register', row.id], {relativeTo: this.route.parent});
+    this.router.navigate(['register', row.id], { relativeTo: this.route.parent });
   }
 
   view(row: any) {
-    this.router.navigate(['view', row.id], {relativeTo: this.route.parent});
+    this.router.navigate(['view', row.id], { relativeTo: this.route.parent });
   }
 
   viewConfirm(row: any) {
-    this.router.navigate(['view', row.id], {relativeTo: this.route.parent});
+    this.router.navigate(['view', row.id], { relativeTo: this.route.parent });
   }
 
 
@@ -529,7 +518,7 @@ export class RegisterEventPageComponent implements OnInit {
       typeImage: new FormControl()
       // companiesids: new FormControl(this.event.companies, [Validators.required])
       // phone: new FormControl(this.event.phone, [Validators.required])
-    }, {updateOn: 'change'});
+    }, { updateOn: 'change' });
   }
 
   showMessages() {
@@ -544,22 +533,25 @@ export class RegisterEventPageComponent implements OnInit {
   }
 
   save() {
-    this.event.companies = null;
-
-    console.log(this.event);
+    console.log(this.form.valid, this.form);
     if (this.form.valid) {
       this.eventService.save(this.event, (result, user) => {
         if (result.desc == "email_already_registred") {
           this.showMessages();
         }
         if (result.success) {
-          this.router.navigate(['list'], {relativeTo: this.route.parent});
+          this.router.navigate(['list'], { relativeTo: this.route.parent });
         } else {
           console.log('Error');
         }
       });
     } else {
       this.formUtils.validateAllFormFields(this.form);
+      swal(
+        'Verifique os dados',
+        'Não foi possível salvar.',
+        'error'
+      );
     }
   }
 

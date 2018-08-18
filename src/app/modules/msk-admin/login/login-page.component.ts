@@ -43,9 +43,7 @@ export class LoginPageComponent implements OnInit{
   // On submit button click
   onSubmit() {
 
-    this.storage.storeToken(null)
-    this.storage.idEvent(null)
-    this.storage.idUser(null)
+    localStorage.clear();
 
     var userB = new UserB();
     userB.email = (<HTMLInputElement>document.getElementById("email")).value
