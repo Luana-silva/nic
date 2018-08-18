@@ -15,12 +15,6 @@ import { defaultLongDateFormat } from '../../../../../node_modules/ngx-bootstrap
 
 declare var require: any;
 
-const quanty = 1;
-const token = localStorage.getItem('token');
-let companyId: string;
-let checkId;
-var nameFile;
-
 @Component({
   selector: 'app-register-reports-page',
   templateUrl: './register-reports-page.component.html',
@@ -36,8 +30,14 @@ export class RegisterReportsPageComponent implements OnInit {
   status = true;
   newEdit: string;
   reports: Reports;
+  companyId;
+  checkId;
+  token = localStorage.getItem('token');
+  nameFile: string;
   public hasBaseDropZoneOver = false;
+
   public uploader: FileUploader;
+
 
   @ViewChild('vform') validationForm: FormGroup;
   form: FormGroup;
@@ -46,7 +46,6 @@ export class RegisterReportsPageComponent implements OnInit {
 
   rows = [];
   public checkUpload: boolean;
-  //nameFile: string;
   // Angular2 File Upload
   fileOverBase(e: any): void {
     this.hasBaseDropZoneOver = e;
@@ -59,8 +58,8 @@ export class RegisterReportsPageComponent implements OnInit {
               private reportsService: ReportsService,
               private storageUtils: StorageUtils) {
 
-    if (this.storageUtils.getRoleId() == "event" || this.storageUtils.getRoleId() == "null" ) {
-      window.location.href = "pages/login";
+    if (this.storageUtils.getRoleId() === 'event' || this.storageUtils.getRoleId() === 'null' ) {
+      window.location.href = 'pages/login';
     }
 
     this.reports = new Reports();
@@ -71,15 +70,21 @@ export class RegisterReportsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.uploader = new FileUploader({
-      url: 'http://192.168.123.10:8080/NICLandPagesWs/rs/report/uploadFile',
+      // url: 'https://1585626c-7536-4eff-967d-3204c8b4862b.mock.pstmn.io/NICLandPagesWs/rs/report/uploadFile',
+      url: 'http://mangobits.servebeer.com:8080/NICLandPagesWs/rs/report/uploadFile',
       isHTML5: true,
-      headers: [{name: 'authorization', value: `Bearer ${token}`}],
-      queueLimit: quanty,
+      headers: [
+        { name: 'Authorization', value: `Bearer ${this.token}` },
+        { name: 'Access-Control-Allow-Origin', value: '*' },
+        { name: 'Access-Control-Allow-Headers', value: 'Content-Type' },
+      ],
       itemAlias: 'file',
+      queueLimit: 1,
+      autoUpload: true,
+      parametersBeforeFiles: true,
       additionalParameter: {
-        idCompany: companyId, name: nameFile ? nameFile : this.getNameDate()
+        idCompany: this.companyId, name: this.nameFile ? this.nameFile : this.getNameDate()
       }
     });
 
@@ -88,12 +93,10 @@ export class RegisterReportsPageComponent implements OnInit {
     };
 
     this.uploader.onBeforeUploadItem = (item: any) => {
-      nameFile = item._file.name;
-        companyId = this.reports.idCompany;
-    };
-
-    this.uploader.onProgressItem = (fileItem: any, progress: any) => {
-      nameFile = fileItem._file.name;
+      this.nameFile = item.file.name;
+      console.log(this.companyId, this.nameFile);
+      this.uploader.options.additionalParameter.idCompany = this.companyId;
+      this.uploader.options.additionalParameter.name = this.nameFile;
     };
 
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
@@ -126,8 +129,8 @@ export class RegisterReportsPageComponent implements OnInit {
         // this.temp = [...list];
       }
     });
-    if (checkId == null || checkId == "null") {
-      this.reports.idCompany = companyId;
+    if (!this.checkId) {
+      this.reports.idCompany = this.companyId;
       this.checkUpload = true;
     }
 
@@ -149,14 +152,11 @@ export class RegisterReportsPageComponent implements OnInit {
       showCancelButton: false,
       confirmButtonText: 'Sim',
     }).then((result) => {
-      if (result.value) {
-        this.router.navigate(['list'], {relativeTo: this.route.parent})
-      }
+      this.router.navigate(['list'], {relativeTo: this.route.parent})
     })
   }
 
   loadData() {
-
     if (this.reports.id == null) {
       this.reports = new Reports();
       this.newEdit = 'Nova';
@@ -168,10 +168,10 @@ export class RegisterReportsPageComponent implements OnInit {
     this.form = new FormGroup({
       idCompany: new FormControl(this.reports.idCompany, [Validators.required]),
     }, {updateOn: 'change'});
-    companyId = this.storageUtils.getIdCompany();
-    checkId = this.storageUtils.getIdEvent();
-    if (checkId == null || checkId == "null") {
-      (<HTMLInputElement> document.getElementById("txtselectCompany")).disabled = true;
+    this.companyId = this.storageUtils.getIdCompany();
+    this.checkId = this.storageUtils.getIdEvent();
+    if (this.checkId == null || this.checkId === 'null') {
+      (<HTMLInputElement> document.getElementById('txtselectCompany')).disabled = true;
     }
   }
 
@@ -196,11 +196,11 @@ export class RegisterReportsPageComponent implements OnInit {
   }
 
   teste() {
-    console.log(document.getElementById("temQuePerderOBlur"));
+    console.log(document.getElementById('temQuePerderOBlur'));
   }
 
   selectCompany() {
-    companyId = this.reports.idCompany;
+    this.companyId = this.reports.idCompany;
     this.checkUpload = true;
   }
 
