@@ -14,13 +14,14 @@ import { AuthService } from './shared/auth/auth.service';
 import { AuthGuard } from './shared/auth/auth-guard.service';
 
 // import * as $ from 'jquery';
-import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {MSKAdminModule} from "./modules/msk-admin/msk-admin.module";
-import {LoadingBarHttpClientModule} from "@ngx-loading-bar/http-client";
-import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import {TranslateHttpLoader} from "@ngx-translate/http-loader";
-import {NgxMaskModule} from "ngx-mask";
-import {EventAutoCompleteService} from "./modules/msk-event/event/event-auto-complete.service";
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { MSKAdminModule } from "./modules/msk-admin/msk-admin.module";
+import { LoadingBarHttpClientModule } from "@ngx-loading-bar/http-client";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { NgxMaskModule } from "ngx-mask";
+import { EventAutoCompleteService } from "./modules/msk-event/event/event-auto-complete.service";
+import { TokenInterceptor } from './shared/auth/token.interceptor';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -29,37 +30,42 @@ export function createTranslateLoader(http: HttpClient) {
 
 @NgModule({
 
-    declarations: [
-        AppComponent,
-        FullLayoutComponent,
-        CleanLayoutComponent,
-        ContentLayoutComponent
+  declarations: [
+    AppComponent,
+    FullLayoutComponent,
+    CleanLayoutComponent,
+    ContentLayoutComponent
 
-    ],
-    imports: [
-      BrowserAnimationsModule,
-      AppRoutingModule,
-      SharedModule,
-      NgbModule.forRoot(),
-      SharedModule,
-      HttpClientModule,
-      LoadingBarHttpClientModule,
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: (createTranslateLoader),
-          deps: [HttpClient]
-        }
-      }),
-      MSKAdminModule,
-      NgxMaskModule.forRoot()
-    ],
-    providers: [
-        AuthService,
-        AuthGuard,
-        EventAutoCompleteService
-    ],
-    bootstrap: [AppComponent]
+  ],
+  imports: [
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    SharedModule,
+    NgbModule.forRoot(),
+    SharedModule,
+    HttpClientModule,
+    LoadingBarHttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
+    MSKAdminModule,
+    NgxMaskModule.forRoot()
+  ],
+  providers: [
+    AuthService,
+    AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    EventAutoCompleteService
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
 

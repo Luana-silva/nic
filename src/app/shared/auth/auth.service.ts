@@ -1,12 +1,18 @@
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
+import { StorageUtils } from '../../utils/storage-utils';
 
 @Injectable()
 export class AuthService {
   token: string;
+  roleId: string;
+  idUser: string;
+  idEvent: string;
 
-  constructor() {}
-
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+  ) { }
   signupUser(email: string, password: string) {
     //your code for signing up the new user
   }
@@ -15,16 +21,17 @@ export class AuthService {
     //your code for checking credentials and getting tokens for for signing in user
   }
 
-  logout() {   
-    this.token = null;
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['login'], { relativeTo: this.activatedRoute.parent });
   }
 
-  getToken() {    
-    return this.token;
+  getToken() {
+    return localStorage.token
   }
 
   isAuthenticated() {
-    // here you can check if user is authenticated or not through his token 
     return true;
+    // return !!localStorage.token;
   }
 }
