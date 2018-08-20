@@ -60,6 +60,7 @@ export class RegisterCompaniesPageComponent implements OnInit {
 
   @ViewChild('vform') validationForm: FormGroup;
   form: FormGroup;
+  logoUrl;
 
   constructor(config: NgbCarouselConfig,
               config1: NgbRatingConfig,
@@ -103,13 +104,17 @@ export class RegisterCompaniesPageComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       this.company.id = params['id'];
+      this.logoUrl = this.getUrl('logo');
     });
 
     this.formUtils = new FormUtils(this.form);
   }
 
   ngOnInit() {
+    this.refresh();
+  }
 
+  refresh(){
     if (this.company.id != null) {
 
       this.companyService.load(this.company.id, (result, company) => {
@@ -249,13 +254,17 @@ export class RegisterCompaniesPageComponent implements OnInit {
     let photoUploadArray = this.data.image.split('base64,'); //only image base64 api support
     photoUpload.photo = photoUploadArray[1];
 
-    if (this.typeImage == 'logo') {
+    if (this.typeImage === 'logo') {
       photoUpload.idSubObject = 'logo'
     }
-
+    const uploadedImage = this.data.image;
     this.data = {};
 
     this.companyService.saveCompanyImage(photoUpload, (result) => {
+      if (this.typeImage === 'logo') {
+        this.logoUrl = uploadedImage;
+      }
+
       if (result.success) {
 
         if (this.company.id != null) {
@@ -348,5 +357,8 @@ export class RegisterCompaniesPageComponent implements OnInit {
     myReader.readAsDataURL(file);
   }
 
-  // cropper
+  changeUploadedImages(images){
+    this.refresh();
+  }
+
 }

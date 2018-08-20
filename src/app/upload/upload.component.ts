@@ -1,5 +1,6 @@
 import {
   Input,
+  Output,
   ViewChild,
   ElementRef,
   AfterViewInit,
@@ -33,8 +34,11 @@ export class UploadComponent implements OnInit {
   @Input() thumbnailHeight?: any = null;
   @Input() parallelUploads?: number = 200;
   @Input() acceptedFiles?: string = '.png,.jpg,.jpeg';
+  @Output() uploadedImages = new EventEmitter();
+
 
   public myDropzoneNG: any = Dropzone;
+  srcArray: any;
 
   constructor(private _elementRef: ElementRef, private storage: StorageUtils) {
 
@@ -131,6 +135,8 @@ export class UploadComponent implements OnInit {
     self.myDropzoneNG.on('queuecomplete', function (progress) {
       self._elementRef.nativeElement.querySelector('#total-progress').style.opacity = '0';
       self.myDropzoneNG.processQueue();
+      self.srcArray = self.myDropzoneNG.files.map(f => f.dataURL);
+      self.uploadedImages.emit({srcArray: self.srcArray});
       // clear all previews
       self.myDropzoneNG.removeAllFiles(true);
     });

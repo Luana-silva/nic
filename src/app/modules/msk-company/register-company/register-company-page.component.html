@@ -401,7 +401,7 @@
 
                 <div *ngIf="typeImage === 'gallery'">
                   <h4>Galeria de imagens</h4>
-                  <app-upload [id_object]="company.id"></app-upload>
+                  <app-upload [id_object]="company.id" (uploadedImages)="changeUploadedImages($event)"></app-upload>
                 </div>
 
               </div>
@@ -429,7 +429,7 @@
 
             <div class="card-body">
               <div class="card-block">
-                <img class="img-fluid max-width: 100%; height: auto;" [src]="getUrl('logo')">
+                <img class="img-fluid max-width: 100%; height: auto;" [src]="logoUrl">
               </div>
             </div>
           </div>
