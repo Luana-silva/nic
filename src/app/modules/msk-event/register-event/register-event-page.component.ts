@@ -401,7 +401,7 @@ export class RegisterEventPageComponent implements OnInit {
   }
 
   addCompany() {
-    if (this.companias.find(c => c.id === this.companyCard.id)) {
+    if (!this.companias.find(c => c.id === this.companyCard.id)) {
       this.companias.push(this.companyCard.id)
       this.companies = this.companias;
       this.event.companies.push(this.companyCard);
