@@ -16,10 +16,10 @@ export class TokenInterceptor implements HttpInterceptor {
     constructor(public auth: AuthService) { }
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const token = this.auth.getToken();
-        if (token) {
+        if (token && !request.url.startsWith('https://viacep.com.br')) {
             request = request.clone({
                 setHeaders: {
-                    Authorization: `Bearer ${this.auth.getToken()}`
+                    Authorization: `Bearer ${this.auth.getToken()}`,
                 }
             });
         }

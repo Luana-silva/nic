@@ -1,23 +1,24 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
-import {NavBarDataService} from '../../../shared/navbar/navbar-dataservice';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Company} from '../company/company';
-import {ActivatedRoute, Router} from '@angular/router';
-import {CompanyService} from '../company/company-service';
-import {CropperSettings, ImageCropperComponent} from 'ng2-img-cropper';
-import {AddressInfo} from '../../msk-core/address/address-info';
-import {SalesOff} from '../../msk-offert/salesoffer/salesOff';
+import { NavBarDataService } from '../../../shared/navbar/navbar-dataservice';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Company } from '../company/company';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CompanyService } from '../company/company-service';
+import { CropperSettings, ImageCropperComponent } from 'ng2-img-cropper';
+import { AddressInfo } from '../../msk-core/address/address-info';
+import { SalesOff } from '../../msk-offert/salesoffer/salesOff';
 
-import {NgbRatingConfig} from '@ng-bootstrap/ng-bootstrap';
+import { NgbRatingConfig } from '@ng-bootstrap/ng-bootstrap';
 
-import {NgbCarousel, NgbCarouselConfig, NgbSlide} from '@ng-bootstrap/ng-bootstrap';
-import {Constants} from '../../../utils/constants';
-import {PhotoUpload} from '../../msk-core/photo/photo-upload';
-import {FormUtils} from '../../../shared/form/form.utils';
-import {Info} from '../../msk-core/info/info';
+import { NgbCarousel, NgbCarouselConfig, NgbSlide } from '@ng-bootstrap/ng-bootstrap';
+import { Constants } from '../../../utils/constants';
+import { PhotoUpload } from '../../msk-core/photo/photo-upload';
+import { FormUtils } from '../../../shared/form/form.utils';
+import { Info } from '../../msk-core/info/info';
 import swal from "sweetalert2";
-import {StorageUtils} from '../../../utils/storage-utils';
+import { StorageUtils } from '../../../utils/storage-utils';
+import { NgxViacepService } from '@brunoc/ngx-viacep';
 // import {UploadComponent} from "../../../upload/upload.component";
 
 declare var require: any;
@@ -47,7 +48,7 @@ export class RegisterCompaniesPageComponent implements OnInit {
 
   typeImage: any;
 
-// cropper
+  // cropper
 
 
   checkCep: boolean;
@@ -63,12 +64,13 @@ export class RegisterCompaniesPageComponent implements OnInit {
   logoUrl;
 
   constructor(config: NgbCarouselConfig,
-              config1: NgbRatingConfig,
-              private router: Router,
-              private navBarDataService: NavBarDataService,
-              private route: ActivatedRoute,
-              private companyService: CompanyService,
-              private storageUtils: StorageUtils) {
+    config1: NgbRatingConfig,
+    private router: Router,
+    private navBarDataService: NavBarDataService,
+    private route: ActivatedRoute,
+    private companyService: CompanyService,
+    private viacep: NgxViacepService,
+    private storageUtils: StorageUtils) {
 
     if (this.storageUtils.getRoleId() != "admin") {
       window.location.href = "pages/login";
@@ -114,7 +116,7 @@ export class RegisterCompaniesPageComponent implements OnInit {
     this.refresh();
   }
 
-  refresh(){
+  refresh() {
     if (this.company.id != null) {
 
       this.companyService.load(this.company.id, (result, company) => {
@@ -183,32 +185,34 @@ export class RegisterCompaniesPageComponent implements OnInit {
       title2: new FormControl(this.company.salesOff[1].title, [Validators.required]),
       typeImage: new FormControl(),
       desc: new FormControl(this.company.desc, [Validators.required])
-    }, {updateOn: 'change'});
+    }, { updateOn: 'change' });
   }
 
   returnAddress() {
 
     if (this.company.addressInfo.zipCode != null && this.company.addressInfo.zipCode != '') {
-      this.companyService.returnAddress(this.company.addressInfo.zipCode, (endereco: any) => {
-        if (endereco != null && endereco.erro != true) {
-          this.company.addressInfo.state = endereco.uf;
-          this.company.addressInfo.street = endereco.logradouro;
-          this.company.addressInfo.district = endereco.bairro;
-          this.company.addressInfo.city = endereco.localidade;
+      this.viacep.buscarPorCep(this.company.addressInfo.zipCode).then((endereco) => {
+        // Endereço retornado :)
+        console.log(endereco);
+        this.company.addressInfo.state = endereco.uf;
+        this.company.addressInfo.street = endereco.logradouro;
+        this.company.addressInfo.district = endereco.bairro;
+        this.company.addressInfo.city = endereco.localidade;
+        this.company.addressInfo.complement = endereco.complemento;
+        this.checkCep = false;
+      }).catch((error) => {
+        // Alguma coisa deu errado :/
+        this.checkCep = true;
+        this.company.addressInfo.state = '';
+        this.company.addressInfo.street = null;
+        this.company.addressInfo.district = '';
+        this.company.addressInfo.city = '';
+        this.company.addressInfo.complement = '';
 
-          this.checkCep = false;
-        } else {
-          this.checkCep = true;
+        this.company.addressInfo.number = '';
 
-          this.company.addressInfo.state = '';
-          this.company.addressInfo.street = null;
-          this.company.addressInfo.district = '';
-          this.company.addressInfo.city = '';
-
-          this.company.addressInfo.number = '0';
-
-          console.log('Cep não encontrado')
-        }
+        console.log('Cep não encontrado')
+        console.log(error.message);
       });
     } else {
       console.log('Cep obrigatorio');
@@ -234,7 +238,7 @@ export class RegisterCompaniesPageComponent implements OnInit {
           this.showMessages();
         }
         if (result.success) {
-          this.router.navigate(['list'], {relativeTo: this.route.parent});
+          this.router.navigate(['list'], { relativeTo: this.route.parent });
         } else {
           console.log('Error');
         }
@@ -357,7 +361,7 @@ export class RegisterCompaniesPageComponent implements OnInit {
     myReader.readAsDataURL(file);
   }
 
-  changeUploadedImages(images){
+  changeUploadedImages(images) {
     this.refresh();
   }
 

@@ -1,7 +1,7 @@
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {JsonContainer} from "./json-container";
-import {Constants} from "../../../utils/constants";
-import {StorageUtils} from "../../../utils/storage-utils";
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {JsonContainer} from './json-container';
+import {Constants} from '../../../utils/constants';
+import {StorageUtils} from '../../../utils/storage-utils';
 
 
 export class RestService {
@@ -17,7 +17,7 @@ export class RestService {
     this.http.post(url, data, options).subscribe(resp => {
 
       if (callback != null) {
-        callback(resp as JsonContainer, resp["data"])
+        callback(resp as JsonContainer, resp['data'])
       }
     });
   }
@@ -40,7 +40,7 @@ export class RestService {
     this.http.get(url, options).subscribe(resp => {
 
       if (callback != null) {
-        callback(resp as JsonContainer, resp["data"])
+        callback(resp as JsonContainer, resp['data'])
       }
     });
   }
@@ -50,7 +50,7 @@ export class RestService {
     this.http.get(url).subscribe(resp => {
 
       if(callback != null){
-        callback(resp as JsonContainer, resp["data"])
+        callback(resp as JsonContainer, resp['data'])
       }
     });
   }
@@ -59,12 +59,16 @@ export class RestService {
     return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.storage.getToken()
+        'Authorization': 'Bearer ' + this.storage.getToken(),
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        'Access-Control-Allow-Headers': 'Origin, Content-Type, Access-Control-Allow-Headers, Accept, Authorization, X-Requested-With',
+        'Access-Control-Allow-Credentials': 'true'
       })
     };
   }
 
   private getUrl(urlSufix: string): string {
-    return Constants.SERVICE_URL + Constants.SERVICE_PROJETC + this.service + "/" + urlSufix;
+    return Constants.SERVICE_URL + Constants.SERVICE_PROJETC + this.service + '/' + urlSufix;
   }
 }

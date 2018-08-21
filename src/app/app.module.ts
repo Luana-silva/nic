@@ -22,6 +22,7 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { NgxMaskModule } from "ngx-mask";
 import { EventAutoCompleteService } from "./modules/msk-event/event/event-auto-complete.service";
 import { TokenInterceptor } from './shared/auth/token.interceptor';
+import { NgxViacepModule } from '@brunoc/ngx-viacep'; // Importando o módulo
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -45,6 +46,7 @@ export function createTranslateLoader(http: HttpClient) {
     SharedModule,
     HttpClientModule,
     LoadingBarHttpClientModule,
+    NgxViacepModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
