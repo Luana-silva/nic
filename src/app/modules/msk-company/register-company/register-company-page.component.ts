@@ -168,6 +168,7 @@ export class RegisterCompaniesPageComponent implements OnInit {
     this.form = new FormGroup({
       number: new FormControl(this.company.addressInfo.number, [Validators.required]),
       name: new FormControl(this.company.name, [Validators.required]),
+      fantasyName: new FormControl(this.company.fantasyName, [Validators.required]),
       street: new FormControl(this.company.addressInfo.street, [Validators.required]),
       state: new FormControl(this.company.addressInfo.state, [Validators.required]),
       city: new FormControl(this.company.addressInfo.city, [Validators.required]),
@@ -245,6 +246,11 @@ export class RegisterCompaniesPageComponent implements OnInit {
       });
     } else {
       this.formUtils.validateAllFormFields(this.form);
+      swal(
+        'Verifique os dados',
+        'Não foi possível salvar.',
+        'error'
+      );
     }
   }
 
@@ -329,6 +335,8 @@ export class RegisterCompaniesPageComponent implements OnInit {
     if (index != -1) {
       this.company.gallery.splice(index, 1);
     }
+    console.log(this.company);
+    
   }
 
   changeCompanyEntity() {
