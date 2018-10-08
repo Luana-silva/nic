@@ -10,7 +10,7 @@ export class Constants {
   //10
   public static get SERVICE_URL(): string { return "http://192.168.123.10:8080"; };
 
-  public static get SERVICE_URL(): string { return "http://192.168.123.10:8080"; };
+  //public static get SERVICE_URL(): string { return "http://192.168.123.10:8080"; };
 
   // public static get SERVICE_URL_LANDPAGE(): string { return "http://192.168.123.10:8080"; };
   // public static get SERVICE_URL(): string { return "http://mangobits.servebeer.com:8080"; };

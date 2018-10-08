@@ -473,7 +473,6 @@ export class RegisterEventPageComponent implements OnInit {
       this.event = new Event();
       this.event.companies = new Array();
       this.event.compamiesIds = new Array();
-      this.event.info = new Array();
       this.newEdit = 'Nova';
     } else {
       this.newEdit = 'Editar - ' + this.event.fantasyName;

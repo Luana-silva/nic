@@ -17,7 +17,7 @@
                     <fieldset class="form-group">
                       <label for="txtName">Nome do Usuario</label>
                       <input type="text" class="form-control" id="txtName" [(ngModel)]="event.userName"
-                             formControlName="userName">{{event.userName}}
+                             formControlName="userName">
                       <small class="form-text text-muted danger"
                              *ngIf="!form.get('userName').valid && (form.get('userName').dirty || form.get('userName').touched)">
                         Campo Obrigatório
