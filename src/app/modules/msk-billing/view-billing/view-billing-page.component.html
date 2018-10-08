@@ -1,0 +1,100 @@
+<!--Basic DataTable Starts-->
+<section id="basic-datatable" class="mb-3">
+
+  <!--<div class="text-right">-->
+  <!--<button type="button" (click)="newBillings()" class="btn btn-raised btn-primary">Enviar Relatório<i class="ft-plus position-right"></i></button>-->
+  <!--</div> -->
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="px-3">
+
+            <div class="form-body">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-1">
+                  <h3>{{_billing?.totalPrice | currency: 'BRL': true }}</h3>
+                  <h4>Total de Vendas</h4>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-1">
+                  <fieldset class="form-group">
+                    <h3>{{_billing?.totalBookings}}</h3>
+                    <h4>Total de Reservas</h4>
+                  </fieldset>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+
+      <!--<input type='text' style='padding:8px;margin:15px auto;width:25%;' placeholder='Filtrar...' (keyup)='updateFilter($event)'/>-->
+
+      <ngx-datatable class="bootstrap fullscreen" [rows]="rows" [columns]="columns" [columnMode]="'force'"
+                     [headerHeight]="50" [scrollbarH]="scrollBarHorizontal"  [footerHeight]="70" [rowHeight]="'auto'" [reorderable]="reorderable" [limit]="10">
+        <!--<i class="ft-edit-2 info font-medium-1 mr-2"></i>-->
+
+        <!--<h1>Lista de Eventos</h1>-->
+
+        <ngx-datatable-column [width]="100" name="Data" maxlength="8" prop="creationDate">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
+            {{row.creationDate | dateFormat }}
+          </ng-template>
+        </ngx-datatable-column>        
+
+        <ngx-datatable-column [width]="200" name="Parceiro" prop="nameCompany">
+
+        </ngx-datatable-column>
+
+        <ngx-datatable-column [width]="200" name="Valor" prop="bookingPrice">
+            <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
+                {{row.bookingPrice | currency: 'BRL': true  }}
+              </ng-template>
+        </ngx-datatable-column>
+
+        <!--<ngx-datatable-column [width]="200" name="Total de Vendas" prop="">-->
+        <!--</ngx-datatable-column>-->
+
+        <!--<ngx-datatable-column name="Status" >-->
+
+        <!--<ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">-->
+
+        <!--<p *ngIf="row.status == 'BLOCKED'">-->
+        <!--Inativo-->
+        <!--</p>-->
+
+        <!--<p *ngIf="row.status == 'ACTIVE'">-->
+        <!--Ativo-->
+        <!--</p>-->
+
+        <!--</ng-template>-->
+        <!--</ngx-datatable-column>-->
+
+        <!--<ngx-datatable-column  [width]="80" >-->
+          <!--<ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template>-->
+            <!--{{column.name}}-->
+          <!--</ng-template>-->
+
+          <!--<ng-template let-column="column" ngx-datatable-header-template>-->
+            <!--actions-->
+          <!--</ng-template>-->
+
+          <!--<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>-->
+            <!--<i class="pb-icon icon-edit" (click)="detail(row)" class="pointer">Detalhes</i>-->
+            <!--&lt;!&ndash;<i class="pb-icon icon-edit" (click)="showMessages()" class="pointer"> | Desativar</i>&ndash;&gt;-->
+          <!--</ng-template>-->
+
+        <!--</ngx-datatable-column>-->
+      </ngx-datatable>
+    </div>
+  </div>
+</section>
+<!--Basic DataTable Ends-->

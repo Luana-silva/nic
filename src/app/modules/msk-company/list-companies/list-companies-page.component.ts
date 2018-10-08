@@ -21,6 +21,8 @@ declare var require: any;
 })
 export class ListCompaniesPageComponent implements OnInit {
 
+  scrollBarHorizontal = (window.innerWidth < 1200);
+
   rows = [];
 
   temp = [];
@@ -45,6 +47,10 @@ export class ListCompaniesPageComponent implements OnInit {
               private companyService: CompanyService,
               private navBarDataService: NavBarDataService,
               private storageUtils: StorageUtils) {
+
+    window.onresize = () => {
+      this.scrollBarHorizontal = (window.innerWidth < 1200);
+    };
 
     if (this.storageUtils.getRoleId() != "admin") {
       window.location.href = "pages/login";
@@ -97,6 +103,7 @@ export class ListCompaniesPageComponent implements OnInit {
 
   detail(row: any) {
     this.router.navigate(['register', row.id], { relativeTo: this.route.parent });
+    console.log(row);
   }
 
   view(row: any) {

@@ -3,14 +3,24 @@ import {UserB} from "../modules/msk-admin/user-b/user-b";
 export class Constants {
 
   //Homolog
-  // public static get SERVICE_URL(): string { return "http://dev.mangobits.net"; };
+  //public static get SERVICE_URL(): string { return "http://dev.mangobits.net"; };
+  //public static get SERVICE_URL_LANDPAGE(): string { return "http://nic.mangobits.com"; };
+
 
   //10
   public static get SERVICE_URL(): string { return "http://192.168.123.10:8080"; };
+
+  public static get SERVICE_URL(): string { return "http://192.168.123.10:8080"; };
+
+  // public static get SERVICE_URL_LANDPAGE(): string { return "http://192.168.123.10:8080"; };
   // public static get SERVICE_URL(): string { return "http://mangobits.servebeer.com:8080"; };
+  // public static get SERVICE_URL_LANDPAGE(): string { return "http://mangobits.servebeer.com:8080"; };
+
 
   //Desenvolvimeno
   // public static get SERVICE_URL(): string { return "http://127.0.0.1:8080"; };
+  // public static get SERVICE_URL_LANDPAGE(): string { return "http://127.0.0.1:8080"; };
+
 
   public static get SERVICE_PROJETC(): string { return "/NICLandPagesWs/rs/"; };
 

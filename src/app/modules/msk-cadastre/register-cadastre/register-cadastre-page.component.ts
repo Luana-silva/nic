@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {NavBarDataService} from '../../../shared/navbar/navbar-dataservice';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Cadastre} from '../cadastre/cadastre';
@@ -43,15 +43,14 @@ export class RegisterCadastrePageComponent implements OnInit {
   @ViewChild('vform') validationForm: FormGroup;
   form: FormGroup;
 
-  constructor(
-              private router: Router,
+  constructor(private router: Router,
               private navBarDataService: NavBarDataService,
               private route: ActivatedRoute,
               private cadastreService: CadastreService,
               private storageUtils: StorageUtils) {
 
-    if (this.storageUtils.getRoleId() != "admin") {
-      window.location.href = "pages/login";
+    if (this.storageUtils.getRoleId() != 'admin') {
+      window.location.href = 'pages/login';
     }
 
     this.cadastre = new Cadastre();
@@ -78,39 +77,44 @@ export class RegisterCadastrePageComponent implements OnInit {
 
   ngOnInit() {
 
+    this.refresh();
+
+    this.navBarDataService.changePageTitle('Usuários')
+  }
+
+
+  refresh() {
     if (this.cadastre.id != null) {
       this.cadastreService.load(this.cadastre.id, (result, cadastre) => {
-        if (cadastre != null) {
+        if (cadastre !== null) {
           this.cadastre = cadastre;
         }
       });
     }
 
     this.loadData();
-
-    this.navBarDataService.changePageTitle("Usuários")
   }
 
 
   loadData() {
 
     if (this.cadastre.id == null) {
-      this.newEdit = "Nova";
+      this.newEdit = 'Nova';
     } else {
-      this.newEdit = "Editar - " + this.cadastre.name;
+      this.newEdit = 'Editar - ' + this.cadastre.name;
     }
-    this.navBarDataService.changePageTitle("Usuário");
+    this.navBarDataService.changePageTitle('Usuário');
 
     this.form = new FormGroup({
       name: new FormControl(this.cadastre.name, [Validators.required]),
-      email: new FormControl(this.cadastre.email,[Validators.required])
+      email: new FormControl(this.cadastre.email, [Validators.required])
     }, {updateOn: 'change'});
   }
 
   save() {
 
     if (this.form.valid) {
-     // console.log("ola")
+      // console.log("ola")
       if (this.cadastre.id != null) {
 
         this.cadastreService.saveUser(this.cadastre, (result) => {
@@ -119,29 +123,44 @@ export class RegisterCadastrePageComponent implements OnInit {
             console.log(result.desc);
             console.log('Error');
           } else {
-
-            this.router.navigate(['list'], {relativeTo: this.route.parent});
+            swal(
+              'Salvo',
+              'Modificações salvas com sucesso.',
+              'success'
+            );
+            // this.router.navigate(['list'], {relativeTo: this.route.parent});
           }
         });
       } else {
 
         this.cadastre.role.id = 'admin';
 
-        this.cadastreService.newUser(this.cadastre, (result) => {
+        this.cadastreService.newUser(this.cadastre, (result, user) => {
           if (!result.success) {
-            if (result.desc == "email_already_registred") {
+            if (result.desc === 'email_already_registred') {
               this.showMessages();
             }
             console.log(result.desc);
             console.log('Error');
           } else {
 
-            this.router.navigate(['list'], {relativeTo: this.route.parent});
+            if (result.success) {
+              if (this.cadastre.id === null || this.cadastre.id === undefined) {
+                this.cadastre.id = user.id;
+                swal(
+                  'Cadastro',
+                  'Usuário cadastrado com sucesso.',
+                  'success'
+                );
+                this.refresh();
+              }
+
+              // this.router.navigate(['list'], {relativeTo: this.route.parent});
+            }
           }
         });
-      }
 
+      }
     }
   }
-
-}
+  }

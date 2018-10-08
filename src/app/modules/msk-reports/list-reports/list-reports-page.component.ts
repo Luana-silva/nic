@@ -25,6 +25,8 @@ declare var require: any;
 })
 export class ListReportsPageComponent implements OnInit {
 
+  scrollBarHorizontal = (window.innerWidth < 1200);
+
   reports: Reports;
 
   rows = [];
@@ -51,6 +53,10 @@ export class ListReportsPageComponent implements OnInit {
               private reportsService: ReportsService,
               private navBarDataService: NavBarDataService,
               private storageUtils: StorageUtils) {
+
+    window.onresize = () => {
+      this.scrollBarHorizontal = (window.innerWidth < 1200);
+    };
 
     if (this.storageUtils.getRoleId() == "event" || this.storageUtils.getRoleId() == "null" ) {
       window.location.href = "pages/login";
@@ -117,14 +123,13 @@ export class ListReportsPageComponent implements OnInit {
 
     console.log(row.id);
 
-    row.status= "BLOCKED";
+    row.status = "BLOCKED";
 
     this.reportsService.updateFile(row, (result, user) => {
       if (result.success) {
 
         this.ngOnInit();
-      }
-      else {
+      } else {
         console.log("Error");
       }
     });

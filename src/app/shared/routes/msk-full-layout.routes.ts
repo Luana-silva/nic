@@ -28,6 +28,10 @@ export const MSK_FULL_LAYOUT_ROUTES: Routes = [
     },
     {
       path: 'pages',
+      loadChildren: './modules/msk-billing/msk-billing.module#MSKBillingModule'
+    },
+    {
+      path: 'pages',
       loadChildren: './modules/msk-dashboard/dashboard-pages.module#DashboardPagesModule'
     },
     {

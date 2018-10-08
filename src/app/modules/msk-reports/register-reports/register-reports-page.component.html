@@ -52,7 +52,7 @@
                       <td class="text-center">
                     <span *ngIf="uploader.progress >= 100">
                       Enviado
-                    </span>  
+                    </span>
                       </td>
                       <td>
                         <button type="button" class="btn btn-raised btn-success btn-sm" (click)="item.upload($event)" [disabled]="item.isReady || item.isUploading || item.isSuccess">

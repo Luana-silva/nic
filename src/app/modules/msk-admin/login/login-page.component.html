@@ -7,17 +7,17 @@
           <br/>
           <br/>
           <!--<div class="card-img overlap">-->
-            <!--<img alt="element 06" class="mb-1" src="assets/img/logos/512.png" width="190">-->
-            <!--</div>-->
-            <div class="card-body align-content">
-              <div class="card-block">
+          <!--<img alt="element 06" class="mb-1" src="assets/img/logos/512.png" width="190">-->
+          <!--</div>-->
+          <div class="card-body align-content">
+            <div class="card-block">
               <div class="alert alert-dark" role="alert" *ngIf="isExpired">
                 Sua sessão expirou, por favor faça login novamente.
               </div>
               <form [formGroup]="regularForm" (ngSubmit)="onSubmit()" novalidate>
                 <div class="form-group ">
                   <div class="col-md-12">
-                    <input type="email" class="form-control" formControlName="email" id="email" placeholder="Email" ngModel required email>
+                    <input type="email" class="form-control" formControlName="email" id="email" placeholder="Email" ngModel required email autocomplete="off">
                     <small class="form-text text-muted danger" *ngIf="!regularForm.get('email').valid && (regularForm.get('email').dirty || regularForm.get('email').touched)">Informe um Email</small>
                     <small class="form-text text-muted danger" *ngIf="emailError != ''">{{emailError}}</small>
                   </div>

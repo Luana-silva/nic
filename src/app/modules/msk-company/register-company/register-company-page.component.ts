@@ -1,24 +1,23 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 
-import { NavBarDataService } from '../../../shared/navbar/navbar-dataservice';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Company } from '../company/company';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CompanyService } from '../company/company-service';
-import { CropperSettings, ImageCropperComponent } from 'ng2-img-cropper';
-import { AddressInfo } from '../../msk-core/address/address-info';
-import { SalesOff } from '../../msk-offert/salesoffer/salesOff';
+import {NavBarDataService} from '../../../shared/navbar/navbar-dataservice';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Company} from '../company/company';
+import {ActivatedRoute, Router} from '@angular/router';
+import {CompanyService} from '../company/company-service';
+import {CropperSettings, ImageCropperComponent} from 'ng2-img-cropper';
+import {AddressInfo} from '../../msk-core/address/address-info';
+import {SalesOff} from '../../msk-offert/salesoffer/salesOff';
 
-import { NgbRatingConfig } from '@ng-bootstrap/ng-bootstrap';
+import {NgbRatingConfig} from '@ng-bootstrap/ng-bootstrap';
 
-import { NgbCarousel, NgbCarouselConfig, NgbSlide } from '@ng-bootstrap/ng-bootstrap';
-import { Constants } from '../../../utils/constants';
-import { PhotoUpload } from '../../msk-core/photo/photo-upload';
-import { FormUtils } from '../../../shared/form/form.utils';
-import { Info } from '../../msk-core/info/info';
+import {NgbCarousel, NgbCarouselConfig, NgbSlide} from '@ng-bootstrap/ng-bootstrap';
+import {Constants} from '../../../utils/constants';
+import {PhotoUpload} from '../../msk-core/photo/photo-upload';
+import {FormUtils} from '../../../shared/form/form.utils';
+import {Info} from '../../msk-core/info/info';
 import swal from "sweetalert2";
-import { StorageUtils } from '../../../utils/storage-utils';
-import { NgxViacepService } from '@brunoc/ngx-viacep';
+import {StorageUtils} from '../../../utils/storage-utils';
 // import {UploadComponent} from "../../../upload/upload.component";
 
 declare var require: any;
@@ -48,8 +47,7 @@ export class RegisterCompaniesPageComponent implements OnInit {
 
   typeImage: any;
 
-  // cropper
-
+// cropper
 
   checkCep: boolean;
 
@@ -64,13 +62,12 @@ export class RegisterCompaniesPageComponent implements OnInit {
   logoUrl;
 
   constructor(config: NgbCarouselConfig,
-    config1: NgbRatingConfig,
-    private router: Router,
-    private navBarDataService: NavBarDataService,
-    private route: ActivatedRoute,
-    private companyService: CompanyService,
-    private viacep: NgxViacepService,
-    private storageUtils: StorageUtils) {
+              config1: NgbRatingConfig,
+              private router: Router,
+              private navBarDataService: NavBarDataService,
+              private route: ActivatedRoute,
+              private companyService: CompanyService,
+              private storageUtils: StorageUtils) {
 
     if (this.storageUtils.getRoleId() != "admin") {
       window.location.href = "pages/login";
@@ -81,9 +78,9 @@ export class RegisterCompaniesPageComponent implements OnInit {
     //rating
 
     //carousel
-    config.interval = 10000;
-    config.wrap = false;
-    config.keyboard = false;
+    config.interval = 5000;
+    config.wrap = true;
+    config.keyboard = true;
     //carousel
 
     // cropper
@@ -103,6 +100,10 @@ export class RegisterCompaniesPageComponent implements OnInit {
     this.typeImage = 'gallery';
 
     this.company = new Company();
+
+    this.company.info = new Info();
+
+    this.company.addressInfo = new AddressInfo();
 
     this.route.params.subscribe(params => {
       this.company.id = params['id'];
@@ -142,9 +143,9 @@ export class RegisterCompaniesPageComponent implements OnInit {
       this.company.salesOff.push(new SalesOff());
       this.company.salesOff.push(new SalesOff());
 
-      this.loadData();
-
       this.company.info.stars = 2;
+
+      this.loadData();
 
     }
 
@@ -156,19 +157,18 @@ export class RegisterCompaniesPageComponent implements OnInit {
     if (this.company.id == null) {
 
       this.navBarDataService.changePageTitle('Parceiro');
-      this.newEdit = 'Nova' + this.company.name;
+      this.newEdit = 'Nova' + this.company.fantasyName;
 
     } else {
 
       this.navBarDataService.changePageTitle('Parceiro');
-      this.newEdit = 'Editar - ' + this.company.name;
+      this.newEdit = 'Editar - ' + this.company.fantasyName;
 
     }
 
     this.form = new FormGroup({
       number: new FormControl(this.company.addressInfo.number, [Validators.required]),
-      name: new FormControl(this.company.name, [Validators.required]),
-      fantasyName: new FormControl(this.company.fantasyName, [Validators.required]),
+      name: new FormControl(this.company.fantasyName, [Validators.required]),
       street: new FormControl(this.company.addressInfo.street, [Validators.required]),
       state: new FormControl(this.company.addressInfo.state, [Validators.required]),
       city: new FormControl(this.company.addressInfo.city, [Validators.required]),
@@ -177,43 +177,42 @@ export class RegisterCompaniesPageComponent implements OnInit {
       district: new FormControl(this.company.addressInfo.district, [Validators.required]),
       document: new FormControl(this.company.document, [Validators.required]),
       url: new FormControl(this.company.info.url, [Validators.required]),
-      userName: new FormControl(this.company.info.userName, [Validators.required]),
       userEmail: new FormControl(this.company.info.userEmail, [Validators.required, Validators.email]),
-      stars: new FormControl(this.company.info.stars),
+      userName: new FormControl(this.company.info.userName, [Validators.required]),
+      stars: new FormControl(this.company.info.stars, [Validators.minLength(0) && Validators.maxLength(5)]),
       priceNow1: new FormControl(this.company.salesOff[0].priceNow, [Validators.required]),
       title1: new FormControl(this.company.salesOff[0].title, [Validators.required]),
       priceNow2: new FormControl(this.company.salesOff[1].priceNow, [Validators.required]),
       title2: new FormControl(this.company.salesOff[1].title, [Validators.required]),
       typeImage: new FormControl(),
       desc: new FormControl(this.company.desc, [Validators.required])
-    }, { updateOn: 'change' });
+    }, {updateOn: 'change'});
+
   }
 
   returnAddress() {
 
     if (this.company.addressInfo.zipCode != null && this.company.addressInfo.zipCode != '') {
-      this.viacep.buscarPorCep(this.company.addressInfo.zipCode).then((endereco) => {
-        // Endereço retornado :)
-        console.log(endereco);
-        this.company.addressInfo.state = endereco.uf;
-        this.company.addressInfo.street = endereco.logradouro;
-        this.company.addressInfo.district = endereco.bairro;
-        this.company.addressInfo.city = endereco.localidade;
-        this.company.addressInfo.complement = endereco.complemento;
-        this.checkCep = false;
-      }).catch((error) => {
-        // Alguma coisa deu errado :/
-        this.checkCep = true;
-        this.company.addressInfo.state = '';
-        this.company.addressInfo.street = null;
-        this.company.addressInfo.district = '';
-        this.company.addressInfo.city = '';
-        this.company.addressInfo.complement = '';
+      this.companyService.returnAddress(this.company.addressInfo.zipCode, (endereco: any) => {
+        if (endereco != null && endereco.erro != true) {
+          this.company.addressInfo.state = endereco.uf;
+          this.company.addressInfo.street = endereco.logradouro;
+          this.company.addressInfo.district = endereco.bairro;
+          this.company.addressInfo.city = endereco.localidade;
 
-        this.company.addressInfo.number = '';
+          this.checkCep = false;
+        } else {
+          this.checkCep = true;
 
-        console.log('Cep não encontrado')
-        console.log(error.message);
+          this.company.addressInfo.state = '';
+          this.company.addressInfo.street = null;
+          this.company.addressInfo.district = '';
+          this.company.addressInfo.city = '';
+
+          this.company.addressInfo.number = '0';
+
+          console.log('Cep não encontrado')
+        }
       });
     } else {
       console.log('Cep obrigatorio');
@@ -233,25 +232,54 @@ export class RegisterCompaniesPageComponent implements OnInit {
 
   save() {
 
-    if (this.form.valid) {
+    if (this.form.valid && this.company.info.stars != null ) {
       this.companyService.save(this.company, (result, user) => {
-        if (result.desc == "email_already_registred") {
+        if (result.desc === "email_already_registred") {
           this.showMessages();
         }
         if (result.success) {
-          this.router.navigate(['list'], { relativeTo: this.route.parent });
+          if (this.company.id === null || this.company.id === undefined) {
+            this.company.id = user.id;
+            swal(
+              'Salvo',
+              'Agora só adicionar as fotos.',
+              'success'
+            );
+            this.refresh();
+          } else {
+            swal(
+              'Salvo',
+              'Informações Salvas com sucesso.',
+              'success'
+            );
+          }
+          // this.router.navigate(['list'], {relativeTo: this.route.parent});
         } else {
           console.log('Error');
         }
       });
     } else {
+
+      if (this.company.info.stars === null || this.company.info.stars === undefined) {
+        swal(
+          'Verifique o campo de estrelas.',
+          'Não foi possível salvar.',
+          'error'
+        );
+      } else {
+        swal(
+          'Verifique os dados',
+          'Não foi possível salvar.',
+          'error'
+        );
+      }
       this.formUtils.validateAllFormFields(this.form);
-      swal(
-        'Verifique os dados',
-        'Não foi possível salvar.',
-        'error'
-      );
+
     }
+  }
+
+  teste() {
+    console.log(this.company);
   }
 
   addPhoto() {
@@ -335,16 +363,13 @@ export class RegisterCompaniesPageComponent implements OnInit {
     if (index != -1) {
       this.company.gallery.splice(index, 1);
     }
-    console.log(this.company);
-    
   }
 
   changeCompanyEntity() {
 
     if (this.company.entity == 'F') {
       this.lblCPFCNPJ = 'CPF (only number)';
-    }
-    else {
+    } else {
       this.lblCPFCNPJ = 'CNPJ (only number)';
     }
   }

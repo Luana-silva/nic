@@ -23,7 +23,9 @@ declare var require: any;
     StorageUtils
   ]
 })
-export class ListEventPageComponent implements OnInit{
+export class ListEventPageComponent implements OnInit {
+
+  scrollBarHorizontal = (window.innerWidth < 1200);
 
   rows = [];
 
@@ -49,6 +51,10 @@ export class ListEventPageComponent implements OnInit{
               private eventService: EventService,
               private navBarDataService: NavBarDataService,
               private storageUtils: StorageUtils) {
+
+    window.onresize = () => {
+      this.scrollBarHorizontal = (window.innerWidth < 1200);
+    };
 
     if (this.storageUtils.getRoleId() != "admin") {
       window.location.href = "pages/login";
@@ -103,7 +109,7 @@ export class ListEventPageComponent implements OnInit{
   }
 
   viewPage(row: any) {
-      window.open( Constants.SERVICE_URL + '?e=' + row.id, '_blank');
+      window.open( Constants.SERVICE_URL_LANDPAGE + '?e=' + row.id, '_blank');
   }
 
   viewConfirm(row: any) {

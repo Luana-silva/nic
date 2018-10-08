@@ -1,14 +1,14 @@
 <!--Basic DataTable Starts-->
 <section id="basic-datatable" class="mb-3">
 
-  <div class="text-right">
-    <button type="button" (click)="newReports()" class="btn btn-raised btn-primary">Enviar Relatório<i class="ft-plus position-right"></i></button>
-  </div>
+  <!--<div class="text-right">-->
+    <!--<button type="button" (click)="newBillings()" class="btn btn-raised btn-primary">Enviar Relatório<i class="ft-plus position-right"></i></button>-->
+  <!--</div> -->
 
     <div class="row">
     <div class="col-sm-12">
 
-      <input type='text' style='padding:8px;margin:15px auto;width:25%;' placeholder='Filtrar...' (keyup)='updateFilter($event)'/>
+      <!--<input type='text' style='padding:8px;margin:15px auto;width:25%;' placeholder='Filtrar...' (keyup)='updateFilter($event)'/>-->
 
       <ngx-datatable class="bootstrap fullscreen" [rows]="rows" [columns]="columns" [columnMode]="'force'"
                      [headerHeight]="50" [scrollbarH]="scrollBarHorizontal"  [footerHeight]="70" [rowHeight]="'auto'" [reorderable]="reorderable" [limit]="10">
@@ -16,15 +16,23 @@
 
         <h1>Lista de Eventos</h1>
 
-        <ngx-datatable-column [width]="100" name="Data" maxlength="8" prop="creationDate">
-          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
-            {{row.creationDate | dateFormat }}
-          </ng-template>
+
+
+        <ngx-datatable-column [width]="200" name="Evento" prop="event.name">
         </ngx-datatable-column>
 
-        <ngx-datatable-column [width]="200" name="Nome do Arquivo" prop="name">
+        <ngx-datatable-column [width]="100" name="Data de Encerramento" maxlength="8" prop="event.end">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
+            {{row.event.end | dateFormat }}
+          </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column [width]="200" name="Nome do Parceiro" prop="nameCompany">
+        <ngx-datatable-column [width]="200" name="Total de Reservas" prop="totalBookings">
+        </ngx-datatable-column>
+
+        <ngx-datatable-column [width]="200" name="Total de Vendas" prop="totalPrice">
+          <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row" let-value="value">
+            {{row.totalPrice | currency: 'BRL': true }}
+          </ng-template>
         </ngx-datatable-column>
 
         <!--<ngx-datatable-column name="Status" >-->
@@ -42,7 +50,7 @@
           <!--</ng-template>-->
         <!--</ngx-datatable-column>-->
 
-        <ngx-datatable-column  [width]="80" >
+        <ngx-datatable-column  [width]="80">
           <ng-template let-column="column" let-sort="sortFn" ngx-datatable-header-template>
             {{column.name}}
           </ng-template>
@@ -52,7 +60,7 @@
           </ng-template>
 
           <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <i class="pb-icon icon-edit" (click)="showMessages(row)" class="pointer">Excluir</i>
+            <i class="pb-icon icon-edit" (click)="view(row.event)" class="pointer">Detalhes</i>
             <!--<i class="pb-icon icon-edit" (click)="showMessages()" class="pointer"> | Desativar</i>-->
           </ng-template>
 

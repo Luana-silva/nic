@@ -100,6 +100,32 @@ import { StorageUtils } from '../../../utils/storage-utils';
 })
 export class RegisterEventPageComponent implements OnInit {
 
+  public keyupLabelOn = false;
+  public keydownLabelOn = false;
+  public disabled = false;
+  public someMin = 0;
+  public someMax = 99;
+
+  public someConfig: any = {
+    range: {
+      min: 0,
+      max: 99
+    },
+    step: 0.1,
+    tooltips: true,
+    disabled: true,
+    format: {
+      to: function ( value ) {
+        return value + '%';
+      },
+      from: function ( value ) {
+        return value.replace('%', '');
+      }
+    }
+  };
+
+  scrollBarHorizontal = (window.innerWidth < 1200);
+
   formatDate: any;
   normalDate: string[];
 
@@ -140,9 +166,9 @@ export class RegisterEventPageComponent implements OnInit {
   temp = [];
 
   company: Company;
-  //TIRAR************************************
+
   companyCard: companyCard;
-  //TIRAR************************************
+
   loadingIndicator: boolean = true;
   reorderable: boolean = true;
   public data_load: any;
@@ -175,6 +201,10 @@ export class RegisterEventPageComponent implements OnInit {
     private _service: EventAutoCompleteService,
     private localeService: BsLocaleService,
     private storageUtils: StorageUtils) {
+
+    window.onresize = () => {
+      this.scrollBarHorizontal = (window.innerWidth < 1200);
+    };
 
     if (this.storageUtils.getRoleId() != "admin") {
       window.location.href = "pages/login";
@@ -245,56 +275,11 @@ export class RegisterEventPageComponent implements OnInit {
   public formatterSearch = (x: { name: string }) => x.name;
 
   ngOnInit() {
-
-    if (this.event.id != null) {
-      this.eventService.load(this.event.id, (result, event) => {
-        if (event != null) {
-          console.log(event);
-          this.event = event;
-          this.event.begin = new DateFormatPipe('en-US').transform(this.event.begin);
-          this.event.end = new DateFormatPipe('en-US').transform(this.event.end);
-
-          this.formatDate = this.event.begin;
-          this.normalDate = this.formatDate.split('/');
-          this.formatDate = this.normalDate[2] + '-' + this.normalDate[1] + '-' + this.normalDate[0];
-          this.event.begin = new Date(this.formatDate);
-          console.log(this.event.begin);
-
-          this.formatDate = this.event.end;
-          this.normalDate = this.formatDate.split('/');
-          this.formatDate = this.normalDate[2] + '-' + this.normalDate[1] + '-' + this.normalDate[0];
-          this.event.end = new Date(this.formatDate);
-          console.log(this.event.end);
-
-          this.source = new LocalDataSource(event.companies);
-
-          //this.rows  = this.event.companies;
-          //this.event.name = name;
-        }
-        this.loadData();
-      });
-    } else {
-
-      this.event = new Event();
-      this.event.companies = new Array();
-      this.event.compamiesIds = new Array();
-
-      this.loadData()
-    }
-
-    this.companyService.listActiveCards((result, list) => {
-      if (list != null) {
-        this.rowOptions = list;
-        this.temp = [...list];
-      }
-    });
-
-    this.navBarDataService.changePageTitle('Evento')
+    this.refresh();
   }
 
 
   changeTypeImage() {
-    // alert(this.typeImage);
 
     if (this.typeImage === 'logo') {
 
@@ -390,15 +375,6 @@ export class RegisterEventPageComponent implements OnInit {
   logoUrl: any;
 
   coverUrl: any;
-
-  testeAddCompany() {
-    // retry(x)// faz evento acontecer x vezes
-    //this.listCompany = [];
-
-    this.companyCard.name = this.company.fantasyName;
-    this.event.companies = [];
-    this.event.companies.push(this.companyCard);
-  }
 
   addCompany() {
     if (!this.companias.find(c => c.id === this.companyCard.id)) {
@@ -497,7 +473,7 @@ export class RegisterEventPageComponent implements OnInit {
       this.event = new Event();
       this.event.companies = new Array();
       this.event.compamiesIds = new Array();
-
+      this.event.info = new Array();
       this.newEdit = 'Nova';
     } else {
       this.newEdit = 'Editar - ' + this.event.fantasyName;
@@ -513,12 +489,14 @@ export class RegisterEventPageComponent implements OnInit {
       secondaryMessage: new FormControl(this.event.secondaryMessage, [Validators.required]),
       begin: new FormControl(this.event.begin, [Validators.required]),
       end: new FormControl(this.event.end, [Validators.required]),
+      tax: new FormControl(this.event.tax),
       mainMessage: new FormControl(this.event.mainMessage, [Validators.required]),
       company: new FormControl(this.company),
       typeImage: new FormControl()
       // companiesids: new FormControl(this.event.companies, [Validators.required])
       // phone: new FormControl(this.event.phone, [Validators.required])
     }, { updateOn: 'change' });
+    this.event.tax = 1;
   }
 
   showMessages() {
@@ -532,15 +510,76 @@ export class RegisterEventPageComponent implements OnInit {
     })
   }
 
+  refresh() {
+    if (this.event.id != null) {
+      this.eventService.load(this.event.id, (result, event) => {
+        if (event != null) {
+          console.log(event);
+          this.event = event;
+          this.event.begin = new DateFormatPipe('en-US').transform(this.event.begin);
+          this.event.end = new DateFormatPipe('en-US').transform(this.event.end);
+
+          this.formatDate = this.event.begin;
+          this.normalDate = this.formatDate.split('/');
+          this.formatDate = this.normalDate[2] + '-' + this.normalDate[1] + '-' + this.normalDate[0];
+          this.event.begin = new Date(this.formatDate);
+          console.log(this.event.begin);
+
+          this.formatDate = this.event.end;
+          this.normalDate = this.formatDate.split('/');
+          this.formatDate = this.normalDate[2] + '-' + this.normalDate[1] + '-' + this.normalDate[0];
+          this.event.end = new Date(this.formatDate);
+          console.log(this.event.end);
+
+          this.source = new LocalDataSource(event.companies);
+
+          //this.rows  = this.event.companies;
+          //this.event.name = name;
+        }
+        this.loadData();
+      });
+    } else {
+
+      this.event = new Event();
+      this.event.companies = new Array();
+      this.event.compamiesIds = new Array();
+
+      this.loadData()
+    }
+
+    this.companyService.listActiveCards((result, list) => {
+      if (list != null) {
+        this.rowOptions = list;
+        this.temp = [...list];
+      }
+    });
+
+    this.navBarDataService.changePageTitle('Evento')
+  }
+
   save() {
-    console.log(this.form.valid, this.form);
     if (this.form.valid) {
       this.eventService.save(this.event, (result, user) => {
         if (result.desc == "email_already_registred") {
           this.showMessages();
         }
         if (result.success) {
-          this.router.navigate(['list'], { relativeTo: this.route.parent });
+          if (this.event.id === null || this.event.id === undefined) {
+            this.event.id = user.id;
+            swal(
+              'Salvo',
+              'Agora só adicionar as fotos.',
+              'success'
+            );
+          } else {
+            swal(
+              'Salvo',
+              'Informações Salvas com sucesso.',
+              'success'
+            );
+          }
+          this.refresh();
+          // this.router.navigate(['list'], { relativeTo: this.route.parent });
         } else {
           console.log('Error');
         }

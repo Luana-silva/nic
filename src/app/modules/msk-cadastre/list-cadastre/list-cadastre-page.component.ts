@@ -23,6 +23,8 @@ declare var require: any;
 })
 export class ListCadastrePageComponent implements OnInit{
 
+  scrollBarHorizontal = (window.innerWidth < 1200);
+
   rows = [];
 
   temp = [];
@@ -47,6 +49,10 @@ export class ListCadastrePageComponent implements OnInit{
               private cadastreService: CadastreService,
               private navBarDataService: NavBarDataService,
               private storageUtils: StorageUtils) {
+
+    window.onresize = () => {
+      this.scrollBarHorizontal = (window.innerWidth < 1200);
+    };
 
     if (this.storageUtils.getRoleId() != "admin") {
       window.location.href = "pages/login";

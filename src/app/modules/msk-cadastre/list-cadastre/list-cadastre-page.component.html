@@ -5,13 +5,13 @@
     <button type="button" (click)="newCadastre()" class="btn btn-raised btn-primary">Adicionar Usuário<i class="ft-plus position-right"></i></button>
   </div>
 
-    <div class="row">
+  <div class="row">
     <div class="col-sm-12">
 
       <input type='text' style='padding:8px;margin:15px auto;width:25%;' placeholder='Filtrar...' (keyup)='updateFilter($event)'/>
 
       <ngx-datatable class="bootstrap fullscreen" [rows]="rows" [columns]="columns" [columnMode]="'force'"
-                     [headerHeight]="50" [footerHeight]="70" [scrollbarH]="true" [rowHeight]="50" [limit]="10">
+                     [headerHeight]="50" [footerHeight]="70" [scrollbarH]="scrollBarHorizontal" [rowHeight]="'auto'" [reorderable]="reorderable" [limit]="10">
         <i class="ft-edit-2 info font-medium-1 mr-2"></i>
 
         <ngx-datatable-column [width]="250" name="Nome" prop="name">
@@ -47,7 +47,7 @@
           <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
             <i class="pb-icon icon-edit" *ngIf="row.status == 'ACTIVE'" (click)="detail(row)" class="pointer">Editar</i>
             <i class="pb-icon icon-edit" *ngIf="row.status == 'ACTIVE'" (click)="showMessages(row)" class="pointer"> | Desativar</i>
-            <i class="pb-icon icon-garbage pointer" *ngIf="row.status == 'BLOCKED'" (click)="disableUser(row)" >Cancelar</i>
+            <i class="pb-icon icon-garbage pointer" *ngIf="row.status == 'BLOCKED'" (click)="disableUser(row)" >Reativar</i>
           </ng-template>
 
         </ngx-datatable-column>

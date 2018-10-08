@@ -7,7 +7,7 @@ import {ReportsService} from '../reports/reports-service';
 import {FileUploader} from 'ng2-file-upload/ng2-file-upload';
 import {CompanyService} from '../../msk-company/company/company-service';
 import {Company} from '../../msk-company/company/company';
-
+import { Constants } from '../../../utils/constants';
 import swal from 'sweetalert2';
 import {StorageUtils} from '../../../utils/storage-utils';
 import { defaultLongDateFormat } from '../../../../../node_modules/ngx-bootstrap/chronos/locale/locale.class';
@@ -72,7 +72,8 @@ export class RegisterReportsPageComponent implements OnInit {
   ngOnInit() {
     this.uploader = new FileUploader({
       // url: 'https://1585626c-7536-4eff-967d-3204c8b4862b.mock.pstmn.io/NICLandPagesWs/rs/report/uploadFile',
-      url: 'http://mangobits.servebeer.com:8080/NICLandPagesWs/rs/report/uploadFile',
+      //url: 'http://mangobits.servebeer.com:8080/NICLandPagesWs/rs/report/uploadFile',
+      url: `${Constants.SERVICE_URL}/NICLandPagesWs/rs/report/uploadFile`,
       isHTML5: true,
       headers: [
         { name: 'Authorization', value: `Bearer ${this.token}` },
@@ -129,7 +130,7 @@ export class RegisterReportsPageComponent implements OnInit {
         // this.temp = [...list];
       }
     });
-    if (!this.checkId) {
+    if (this.checkId == 'partner') {
       this.reports.idCompany = this.companyId;
       this.checkUpload = true;
     }
@@ -166,11 +167,11 @@ export class RegisterReportsPageComponent implements OnInit {
     this.navBarDataService.changePageTitle('Relatórios');
 
     this.form = new FormGroup({
-      idCompany: new FormControl(this.reports.idCompany, [Validators.required]),
+      idCompany: new FormControl(this.reports.idCompany),
     }, {updateOn: 'change'});
     this.companyId = this.storageUtils.getIdCompany();
-    this.checkId = this.storageUtils.getIdEvent();
-    if (this.checkId == null || this.checkId === 'null') {
+    this.checkId = this.storageUtils.getRoleId();
+    if (this.checkId == 'partner') {
       (<HTMLInputElement> document.getElementById('txtselectCompany')).disabled = true;
     }
   }

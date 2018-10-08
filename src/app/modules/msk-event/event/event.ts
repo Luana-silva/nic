@@ -8,6 +8,8 @@ export class Event {
 
   id: string;
 
+  tax: number;
+
   name: string;
 
   begin: Date;

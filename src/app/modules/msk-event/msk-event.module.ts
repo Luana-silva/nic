@@ -20,9 +20,11 @@ import {EventService} from "./event/event-service";
 import {ViewEventPageComponent} from "./view-event/view-event-page.component";
 import {NgbdTypeaheadHttp} from "./event/typeahead-template.component";
 import {NgxMaskModule} from 'ngx-mask'
+import {NouisliderModule} from 'ng2-nouislider';
 
 @NgModule({
     imports: [
+        NouisliderModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
