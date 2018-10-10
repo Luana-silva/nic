@@ -19,6 +19,8 @@ export class CompanyService extends RestService{
   }
 
   save(company: Company, callback: (result: JsonContainer, company: Company) => void){
+    console.log('service', company);
+    
     this.executePost("save", company, callback)
   }
 

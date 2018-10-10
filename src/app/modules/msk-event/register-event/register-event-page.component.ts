@@ -114,12 +114,13 @@ export class RegisterEventPageComponent implements OnInit {
     step: 0.1,
     tooltips: true,
     disabled: true,
+    start: 1,
     format: {
       to: function ( value ) {
-        return value + '%';
+        return value ? parseFloat(value).toFixed(1) + '%' : '0%';
       },
       from: function ( value ) {
-        return value.replace('%', '');
+        return value ? parseFloat(value).toFixed(1).replace('%', '') : '0%';
       }
     }
   };
@@ -510,6 +511,7 @@ export class RegisterEventPageComponent implements OnInit {
   }
 
   refresh() {
+    this.loadData();
     if (this.event.id != null) {
       this.eventService.load(this.event.id, (result, event) => {
         if (event != null) {
@@ -535,7 +537,6 @@ export class RegisterEventPageComponent implements OnInit {
           //this.rows  = this.event.companies;
           //this.event.name = name;
         }
-        this.loadData();
       });
     } else {
 
@@ -543,7 +544,6 @@ export class RegisterEventPageComponent implements OnInit {
       this.event.companies = new Array();
       this.event.compamiesIds = new Array();
 
-      this.loadData()
     }
 
     this.companyService.listActiveCards((result, list) => {

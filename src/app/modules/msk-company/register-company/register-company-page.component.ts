@@ -124,7 +124,9 @@ export class RegisterCompaniesPageComponent implements OnInit {
 
         if (company != null) {
           this.company = company;
+          
         }
+        console.log(result, company);
         this.loadData();
       });
 
@@ -133,6 +135,8 @@ export class RegisterCompaniesPageComponent implements OnInit {
       checkGallery = true;
 
       this.company = new Company();
+      console.log('nocomp');
+      
 
       this.company.info = new Info();
 
@@ -153,7 +157,6 @@ export class RegisterCompaniesPageComponent implements OnInit {
   }
 
   loadData() {
-
     if (this.company.id == null) {
 
       this.navBarDataService.changePageTitle('Parceiro');
@@ -232,7 +235,7 @@ export class RegisterCompaniesPageComponent implements OnInit {
 
   save() {
 
-    if (this.form.valid && this.company.info.stars != null ) {
+    // if (this.form.valid && this.company.info.stars != null ) {
       this.companyService.save(this.company, (result, user) => {
         if (result.desc === "email_already_registred") {
           this.showMessages();
@@ -258,28 +261,29 @@ export class RegisterCompaniesPageComponent implements OnInit {
           console.log('Error');
         }
       });
-    } else {
+    // } else {
 
-      if (this.company.info.stars === null || this.company.info.stars === undefined) {
-        swal(
-          'Verifique o campo de estrelas.',
-          'Não foi possível salvar.',
-          'error'
-        );
-      } else {
-        swal(
-          'Verifique os dados',
-          'Não foi possível salvar.',
-          'error'
-        );
-      }
-      this.formUtils.validateAllFormFields(this.form);
+    //   if (this.company.info.stars === null || this.company.info.stars === undefined) {
+    //     swal(
+    //       'Verifique o campo de estrelas.',
+    //       'Não foi possível salvar.',
+    //       'error'
+    //     );
+    //   } else {
+    //     swal(
+    //       'Verifique os dados',
+    //       'Não foi possível salvar.',
+    //       'error'
+    //     );
+    //   }
+    //   this.formUtils.validateAllFormFields(this.form);
 
-    }
+    // }
   }
 
   teste() {
     console.log(this.company);
+    console.log(this.form);
   }
 
   addPhoto() {
@@ -298,7 +302,10 @@ export class RegisterCompaniesPageComponent implements OnInit {
     const uploadedImage = this.data.image;
     this.data = {};
 
+    console.log('before saveCompanyImage', this.company);
     this.companyService.saveCompanyImage(photoUpload, (result) => {
+      console.log('saveCompanyImage', this.company);
+      
       if (this.typeImage === 'logo') {
         this.logoUrl = uploadedImage;
       }
@@ -306,7 +313,8 @@ export class RegisterCompaniesPageComponent implements OnInit {
       if (result.success) {
 
         if (this.company.id != null) {
-          this.companyService.load(this.company.id, (result, company) => {
+          this.companyService.load(this.company.id, (r, company) => {
+            console.log('logo', company);
             if (company != null) {
               this.company.gallery = company.gallery;
             }
