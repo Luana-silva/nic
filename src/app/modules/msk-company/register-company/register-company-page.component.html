@@ -15,10 +15,15 @@
                 <div class="row">
 
                   <div class="col-xl-3 col-lg-5 col-md-12 mb-1">
+                    <!-- {{company|json}} -->
+                    {{company.info|json}}
                     <fieldset class="form-group">
                       <label for="txtuserName">Nome de Usuário</label>
                       <input type="text" class="form-control" id="txtuserName" [(ngModel)]="company.info.userName"
-                             formControlName="userName">
+                              [value]="company.info.userName" (input)="company.info.userName=$event.target.value;this.form.setValue({ 'userName': company.info.userName})"
+
+                             formControlName="userName"
+                             >
                       <small class="form-text text-muted danger"
                              *ngIf="!form.get('userName').valid && (form.get('userName').dirty || form.get('userName').touched)">
                         Campo Obrigatório
@@ -355,14 +360,14 @@
               <div class="input-group">
 
                 <label class="display-inline-block custom-control custom-radio ml-1">
-                  <input type="radio" name="imageCompany" value="logo" formControlName="typeImage"
+                  <input type="radio" name="typeImage" value="logo" formControlName="typeImage"
                          [(ngModel)]="typeImage" (change)="changeTypeImage()" class="custom-control-input">
                   <span class="custom-control-indicator"></span>
                   <span class="custom-control-description ml-0">Logo</span>
                 </label>
 
                 <label class="display-inline-block custom-control custom-radio ml-1">
-                  <input type="radio" name="imageCompany" value="gallery" formControlName="typeImage" [(ngModel)]="typeImage" (change)="changeTypeImage()" class="custom-control-input">
+                  <input type="radio" name="typeImage" value="gallery" formControlName="typeImage" [(ngModel)]="typeImage" (change)="changeTypeImage()" class="custom-control-input">
                   <span class="custom-control-indicator"></span>
                   <span class="custom-control-description ml-0">Galeria</span>
                 </label>
